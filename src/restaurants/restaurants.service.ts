@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, Query } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Restaurant } from './entities/restaurant.entity';
 
 @Injectable()
@@ -12,8 +12,7 @@ export class RestaurantsService {
     },
   ];
 
-  findAll(@Query() paginationQuery) {
-    const { limit, offset } = paginationQuery;
+  findAll() {
     return this.restaurants;
   }
 

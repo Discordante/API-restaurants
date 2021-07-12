@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import { RestaurantsService } from './restaurants.service';
 
@@ -14,7 +15,8 @@ export class RestaurantsController {
   constructor(private readonly restaurantsService: RestaurantsService) {}
 
   @Get()
-  findAll() {
+  findAll(@Query() paginationQuery) {
+    const { limit, offset } = paginationQuery;
     return this.restaurantsService.findAll();
   }
 
