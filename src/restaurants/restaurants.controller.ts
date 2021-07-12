@@ -16,7 +16,7 @@ export class RestaurantsController {
 
   @Get()
   findAll(@Query() paginationQuery) {
-    const { limit, offset } = paginationQuery;
+    //const { limit, offset } = paginationQuery;
     return this.restaurantsService.findAll();
   }
 
