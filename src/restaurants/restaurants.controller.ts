@@ -8,6 +8,8 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
+import { CreateRestaurantDto } from './dto/create-restaurant.dto';
+import { UpdateRestaurantDto } from './dto/update-restaurant.dto';
 import { RestaurantsService } from './restaurants.service';
 
 @Controller('restaurants')
@@ -26,13 +28,13 @@ export class RestaurantsController {
   }
 
   @Post()
-  create(@Body() body) {
-    return this.restaurantsService.create(body);
+  create(@Body() createRestaurantDto: CreateRestaurantDto) {
+    return this.restaurantsService.create(createRestaurantDto);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() body) {
-    return this.restaurantsService.update(id, body);
+  update(@Param('id') id: string, @Body() updateRestaurantDto: UpdateRestaurantDto) {
+    return this.restaurantsService.update(id, updateRestaurantDto);
   }
 
   @Delete(':id')
