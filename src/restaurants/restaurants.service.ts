@@ -1,23 +1,24 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
+import { UpdateRestaurantDto } from './dto/update-restaurant.dto';
 import { Restaurant } from './entities/restaurant.entity';
 
 @Injectable()
 export class RestaurantsService {
-  private restaurants: Restaurant[] = [
-    {
-      id: 1,
-      name: 'Shipwreck Roast',
-      priceAvg: 12,
-      category: 'mediterranean',
-    },
-  ];
+  constructor(
+    @InjectModel(Restaurant.name)
+    private readonly restaurantModel: Model<Restaurant>,
+  ) {}
 
-  findAll() {
-    return this.restaurants;
+  findAll(paginationQuery: PaginationQueryDto) {
+    const { limit, offset } = paginationQuery;
+    return this.restaurantModel.find().skip(offset).limit(limit).exec();
   }
 
-  findOne(id: string) {
-    const restaurant = this.restaurants.find((item) => item.id === +id);
+  async findOne(id: string) {
+    const restaurant = await this.restaurantModel.findOne({ _id: id }).exec();
     if (!restaurant) {
       throw new NotFoundException(`restaurant #${id} not found`);
     }
@@ -25,22 +26,27 @@ export class RestaurantsService {
   }
 
   create(createRestaurantDto: any) {
-    this.restaurants.push(createRestaurantDto);
+    const restaurant = new this.restaurantModel(createRestaurantDto);
+    return restaurant.save();
   }
 
-  update(id: string, updateRestaurantDto: any) {
-    const existingRestaurant = this.findOne(id);
-    if (existingRestaurant) {
-      // update the existing entity
+  async update(id: string, updateRestaurantDto: UpdateRestaurantDto) {
+    const existingRestaurant = await this.restaurantModel
+      .findOneAndUpdate(
+        { _id: id },
+        { $set: updateRestaurantDto },
+        { new: true },
+      )
+      .exec();
+
+    if (!existingRestaurant) {
+      throw new NotFoundException(`Restaurant #${id} not found`);
     }
+    return existingRestaurant;
   }
 
-  remove(id: string) {
-    const restaurantIndex = this.restaurants.findIndex(
-      (item) => item.id === +id,
-    );
-    if (restaurantIndex >= 0) {
-      this.restaurants.splice(restaurantIndex, 1);
-    }
+  async remove(id: string) {
+    const restaurant = await this.findOne(id);
+    return restaurant.remove();
   }
 }
