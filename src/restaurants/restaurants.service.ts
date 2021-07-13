@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
 import { UpdateRestaurantDto } from './dto/update-restaurant.dto';
 import { Restaurant } from './entities/restaurant.entity';
 
@@ -11,8 +12,9 @@ export class RestaurantsService {
     private readonly restaurantModel: Model<Restaurant>,
   ) {}
 
-  findAll() {
-    return this.restaurantModel.find().exec();
+  findAll(paginationQuery: PaginationQueryDto) {
+    const { limit, offset } = paginationQuery;
+    return this.restaurantModel.find().skip(offset).limit(limit).exec();
   }
 
   async findOne(id: string) {

@@ -8,6 +8,7 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
+import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
 import { CreateRestaurantDto } from './dto/create-restaurant.dto';
 import { UpdateRestaurantDto } from './dto/update-restaurant.dto';
 import { RestaurantsService } from './restaurants.service';
@@ -17,9 +18,8 @@ export class RestaurantsController {
   constructor(private readonly restaurantsService: RestaurantsService) {}
 
   @Get()
-  findAll(@Query() paginationQuery) {
-    //const { limit, offset } = paginationQuery;
-    return this.restaurantsService.findAll();
+  findAll(@Query() paginationQuery: PaginationQueryDto) {
+    return this.restaurantsService.findAll(paginationQuery);
   }
 
   @Get(':id')
