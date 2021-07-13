@@ -1,5 +1,4 @@
-export class UpdateRestaurantDto {
-  readonly name?: string;
-  readonly priceAvg?: number;
-  readonly category?: string;
-}
+import { PartialType } from '@nestjs/mapped-types';
+import { CreateRestaurantDto } from './create-restaurant.dto';
+
+export class UpdateRestaurantDto extends PartialType(CreateRestaurantDto) {}

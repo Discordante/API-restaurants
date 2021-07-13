@@ -23,8 +23,8 @@ export class RestaurantsController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.restaurantsService.findOne(id);
+  findOne(@Param('id') id: number) {
+    return this.restaurantsService.findOne('' + id);
   }
 
   @Post()
@@ -33,7 +33,10 @@ export class RestaurantsController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateRestaurantDto: UpdateRestaurantDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateRestaurantDto: UpdateRestaurantDto,
+  ) {
     return this.restaurantsService.update(id, updateRestaurantDto);
   }
 
