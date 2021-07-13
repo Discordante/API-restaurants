@@ -23,8 +23,8 @@ export class RestaurantsController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: number) {
-    return this.restaurantsService.findOne('' + id);
+  findOne(@Param('id') id: string) {
+    return this.restaurantsService.findOne(id);
   }
 
   @Post()
